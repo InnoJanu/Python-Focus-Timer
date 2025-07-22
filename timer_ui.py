@@ -125,7 +125,7 @@ class Timer_UI(QWidget):
         # Set Grid layout to window
         self.setLayout(self.grid_layout)
         
-    # Start / Stop Button Links
+    # Start / Reset Button Links
         self.pushButton_a1.clicked.connect(lambda: self.change_button(self.pushButton_a1, self.timer_setting[0], self.label_a1, timer_a, 0))
         self.pushButton_b1.clicked.connect(lambda: self.change_button(self.pushButton_b1, self.timer_setting[1], self.label_b1, timer_b, 1))
         self.pushButton_c1.clicked.connect(lambda: self.change_button(self.pushButton_c1, self.timer_setting[2], self.label_c1, timer_c, 2))
@@ -149,7 +149,7 @@ class Timer_UI(QWidget):
                 self.remaining_time = setting - 1
 
             if button.text() == "Start":
-                button.setText("Stop")
+                button.setText("Reset")
 
                 try:
                     timer.timeout.disconnect()
@@ -161,7 +161,7 @@ class Timer_UI(QWidget):
             
             else:
                 button.setText("Start")
-                timer.stop()
+                self.reset_timer(current_label, timer, setting, status, button)
         else:
             pass
         
@@ -182,7 +182,7 @@ class Timer_UI(QWidget):
                 self.play_audio()
                 self.running_timer = None
 
-    def reset_timer(self, current_label, setting, button, timer, status):
+    def reset_timer(self, current_label, timer, setting, status, button):
         if self.running_timer == None or self.running_timer == status:
             timer.stop()
             self.player.stop()
