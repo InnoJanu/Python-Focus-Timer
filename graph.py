@@ -19,9 +19,13 @@ class Graph_Window(QWidget):
         self.figure_layout = QHBoxLayout()
         self.figure_container = QWidget()
         self.figure_container.setLayout(self.figure_layout)
+
+        self.top_widgets = QWidget()
+        self.top_horizontal_layout = QHBoxLayout()
+        self.top_widgets.setLayout(self.top_horizontal_layout)
+
         colors1 = ['#4682A9', '#749BC2', '#91C8E4']
         colors2 = ['#FBFBFB', '#789DBC', '#BCCCDC']
-
 
         # Data handling
         csv_path = 'timer_sessions.csv'
@@ -103,9 +107,6 @@ class Graph_Window(QWidget):
             total_business = cur_business_filter['duration'].sum()
             total_reading = cur_reading_filter['duration'].sum()
             
-            
-
-            
             # ================================================ Pie Chart ================================================
             # Data
             pie_labels = ['Study', 'Business', 'Reading']
@@ -124,8 +125,6 @@ class Graph_Window(QWidget):
 
             canvas.setMinimumSize(400, 300)
 
-            
-
             if not filtered_data:
                 # If all values are zero, show a fallback message
                 ax.text(0.5, 0.5, 'No data to display', ha='center', va='center', fontsize=14)
@@ -143,8 +142,10 @@ class Graph_Window(QWidget):
                 )
             ax.axis('equal')
             self.figure_layout.addWidget(canvas)
+
+            self.top_horizontal_layout.addWidget(canvas, 1)
             # ================================================ Tiles ================================================
-            # Calculations
+           # Calculations
             self.total_hours = self.week_total // 60
             self.total_mins = self.week_total % 60
 
@@ -154,43 +155,42 @@ class Graph_Window(QWidget):
             self.today_hours = self.today_total_focus // 60
             self.today_mins = self.today_total_focus % 60
             
-            self.block1 = QWidget()
-            self.block1_layout = QVBoxLayout()
-            self.block1.setLayout(self.block1_layout)
+            # Set Text
+            self.headings = [
+                "Today",
+                "Week Avg",
+                "Week Total"
+            ]
 
-            self.heading1 = QLabel("Daily Avg")
-            self.sub_heading1 = QLabel(f"{self.avg_hours}h {self.avg_mins}m")
+            self.sub_headings = [
+                 f"{self.today_hours}h {self.today_mins}m",
+                 f"{self.avg_hours}h {self.avg_mins}m",
+                 f"{self.total_hours}h {self.total_mins}m",
+            ]
+            
+            # Initialize blocks
+            count = 0
+            for block in range(3):
+                #Intialize
+                self.block = QWidget()
+                self.block_layout = QVBoxLayout()
+                self.block.setLayout(self.block_layout)
 
-            self.block1_layout.addWidget(self.heading1)
-            self.block1_layout.addWidget(self.sub_heading1)
+                self.heading = QLabel(self.headings[count])
+                self.block_layout.addWidget(self.heading)
 
-            # Block 2
-            self.block2 = QWidget()
-            self.block2_layout = QVBoxLayout()
-            self.block2.setLayout(self.block2_layout)
+                self.sub_heading = QLabel(self.sub_headings[count])
+                self.block_layout.addWidget(self.sub_heading)
 
-            self.heading2 = QLabel("Week Total")
-            self.sub_heading2 = QLabel(f"{self.total_hours}h {self.total_mins}m")
+                self.top_horizontal_layout.addWidget(self.block, 1)
 
-            self.block2_layout.addWidget(self.heading2)
-            self.block2_layout.addWidget(self.sub_heading2)
+                # Style
+                self.heading.setStyleSheet("font-size: 40px")
+                self.heading.setAlignment(Qt.AlignCenter)
+                self.sub_heading.setStyleSheet("font-size: 25px")
+                self.sub_heading.setAlignment(Qt.AlignCenter)
 
-            # Block 3
-            self.block3 = QWidget()
-            self.block3_layout = QVBoxLayout()
-            self.block3.setLayout(self.block3_layout)
-
-            self.heading3 = QLabel("Today")
-            self.sub_heading3 = QLabel(f"{self.today_hours}h {self.today_mins}m")  # Define these vars
-
-            self.block3_layout.addWidget(self.heading3)
-            self.block3_layout.addWidget(self.sub_heading3)
-
-            # Add blocks to layout
-            self.blocks_layout = QHBoxLayout()
-            self.blocks_layout.addWidget(self.block1)
-            self.blocks_layout.addWidget(self.block2)
-            self.blocks_layout.addWidget(self.block3)
+                count += 1
 
     # ============================= Bar Charts ============================================================
 
@@ -300,14 +300,6 @@ class Graph_Window(QWidget):
                 ha='center', va='bottom'
                 )
 
-            for heading in [self.heading1, self.heading2, self.heading3]:
-                heading.setStyleSheet("font-size: 35px; font-weight: bold;")
-                heading.setAlignment(Qt.AlignCenter)
-
-            for heading in [self.sub_heading1, self.sub_heading2, self.sub_heading3]:
-                heading.setStyleSheet("font-size: 25px;")
-                heading.setAlignment(Qt.AlignCenter)
-
             # Duplicate graph below in red
             business_hours_r = [round(num / 60, 1) for num in business_duration_list]
 
@@ -365,16 +357,6 @@ class Graph_Window(QWidget):
             self.graph_widget.addWidget(self.canvas2)
             self.graph_widget.addWidget(self.canvas3)
 
-
-            self.top_widgets = QWidget()
-            self.top_horizontal_layout = QHBoxLayout()
-            self.top_widgets.setLayout(self.top_horizontal_layout)
-
-            self.top_horizontal_layout.addWidget(canvas, 1)
-            self.top_horizontal_layout.addWidget(self.block3, 1)
-            self.top_horizontal_layout.addWidget(self.block1, 1)
-            self.top_horizontal_layout.addWidget(self.block2, 1)
-
             
             
             self.main_layout = QVBoxLayout()
@@ -397,11 +379,8 @@ class Graph_Window(QWidget):
 
             self.graph_widget.setCurrentIndex(0)
 
-
         self.setLayout(self.main_layout)
         
-
-
 # Run the app
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -409,4 +388,3 @@ if __name__ == "__main__":
     window.resize(1500, 1000)
     window.show()
     sys.exit(app.exec_())
-
