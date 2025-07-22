@@ -103,7 +103,6 @@ class Graph_Window(QWidget):
             self.week_avg = current_week['duration'].sum() // (today.dayofweek + 1)
             self.week_total = current_week['duration'].sum()
         
-
             # Pie numbers
             total_study =  cur_study_filter['duration'].sum()
             total_business = cur_business_filter['duration'].sum()
@@ -216,94 +215,38 @@ class Graph_Window(QWidget):
             self.button_layout.setSpacing(0)
             self.button_layout.setContentsMargins(0, 0, 0, 0)
             
+            def create_bar_charts():
+                all_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                study_hours = [round(num / 60, 1) for num in study_duration_list]
+                business_hours_r = [round(num / 60, 1) for num in business_duration_list]
+                reading_hours_r = [round(num / 60, 1) for num in reading_duration_list]
+                selection_list = [study_hours, business_hours_r, reading_hours_r]
+                
+                count = 0
 
+                for i in range(3):
+                    self.figure4 = Figure(figsize=(8, 5))
+                    self.canvas4 = FigureCanvas(self.figure4)
+                    self.ax4 = self.figure4.add_subplot(111)
 
-            # Ensure all days are present
-            all_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-            study_hours = [round(num / 60, 1) for num in study_duration_list]
+                    bars4 = self.ax4.bar(all_days, selection_list[count], color=colors1[count])
+                    self.ax4.set_title('Study Hours p/Day')
+                    self.ax4.set_ylabel('Hours')
+                    self.ax4.set_xlabel('')
+                    self.ax4.set_ylim(0, max(selection_list[count]) + 1)
 
-            # Set up the first plot 
-            self.figure1 = Figure(figsize=(8, 5))
-            self.canvas1 = FigureCanvas(self.figure1)
-            self.ax1 = self.figure1.add_subplot(111)
-
-            # self.canvas1.setMinimumHeight(350)
-
-            bars1 = self.ax1.bar(all_days, study_hours, color=colors1[0])
-            self.ax1.set_title('Study Hours p/Day')
-            self.ax1.set_ylabel('Hours')
-            self.ax1.set_xlabel('')
-            self.ax1.set_ylim(0, max(study_hours) + 1)
-
-            # Add data labels on top of each bar
-            for bar1 in bars1:
-                height = bar1.get_height()
-                self.ax1.annotate(
-                f'{height}',
-                xy=(bar1.get_x() + bar1.get_width() / 2, height),
-                xytext=(0, 3),  # 3 points vertical offset
-                textcoords="offset points",
-                ha='center', va='bottom'
-                )
-
-            # Duplicate graph below in red
-            business_hours_r = [round(num / 60, 1) for num in business_duration_list]
-
-            self.figure2 = Figure(figsize=(8, 5))
-            self.canvas2 = FigureCanvas(self.figure2)
-            self.ax2 = self.figure2.add_subplot(111)
-
-            # self.canvas2.setMinimumHeight(350)
-
-            bars2 = self.ax2.bar(all_days, business_hours_r, color=colors1[1])
-            self.ax2.set_title('Business Hours p/Day')
-            self.ax2.set_ylabel('Hours')
-            self.ax2.set_xlabel('')
-            self.ax2.set_ylim(0, max(business_hours_r) + 1)
-
-            for bar in bars2:
-                height = bar.get_height()
-                self.ax2.annotate(
-                f'{height}',
-                xy=(bar.get_x() + bar.get_width() / 2, height),
-                xytext=(0, 3),
-                textcoords="offset points",
-                ha='center', va='bottom'
-                )
-
-            # Duplicate graph below in red
-            reading_hours_r = [round(num / 60, 1) for num in reading_duration_list]  
-
-            self.figure3 = Figure(figsize=(8, 5))
-            self.canvas3 = FigureCanvas(self.figure3)
-            self.ax3 = self.figure3.add_subplot(111)
-
-            # self.canvas3.setMinimumHeight(350)
-
-            bars3 = self.ax3.bar(all_days, reading_hours_r, color=colors1[2])
-            self.ax3.set_title('Reading Hours p/Day')
-            self.ax3.set_ylabel('Hours')
-            self.ax3.set_xlabel('')
-            self.ax3.set_ylim(0, max(reading_hours_r) + 1)
-
-            for bar in bars3:
-                height = bar.get_height()
-                self.ax3.annotate(
-                f'{height}',
-                xy=(bar.get_x() + bar.get_width() / 2, height),
-                xytext=(0, 3),
-                textcoords="offset points",
-                ha='center', va='bottom'
-                )
-
-            
-
-            
-            self.graph_widget.addWidget(self.canvas1)
-            self.graph_widget.addWidget(self.canvas2)
-            self.graph_widget.addWidget(self.canvas3)
-
-            
+                    for bar4 in bars4:
+                        height = bar4.get_height()
+                        self.ax4.annotate(
+                        f'{height}',
+                        xy=(bar4.get_x() + bar4.get_width() / 2, height),
+                        xytext=(0, 3),  # 3 points vertical offset
+                        textcoords="offset points",
+                        ha='center', va='bottom'
+                        )
+                    count += 1
+                    self.graph_widget.addWidget(self.canvas4)
+            create_bar_charts()
             
             self.main_layout = QVBoxLayout()
 
