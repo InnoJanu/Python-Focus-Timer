@@ -56,8 +56,7 @@ class Timer_UI(QWidget):
 
         self.pushButton_a1 = QtWidgets.QPushButton("Start")
         self.hbox_a.addWidget(self.pushButton_a1)   
-        self.pushButton_a3 = QtWidgets.QPushButton("Reset")
-        self.hbox_a.addWidget(self.pushButton_a3)
+        
         self.grid_layout.addWidget(self.hbox_a_container, 2, 0, 1, 1)
 
        
@@ -78,8 +77,7 @@ class Timer_UI(QWidget):
         self.pushButton_b1 = QtWidgets.QPushButton("Start")
         self.hbox_b.addWidget(self.pushButton_b1)
           
-        self.pushButton_b3 = QtWidgets.QPushButton("Reset")
-        self.hbox_b.addWidget(self.pushButton_b3)
+        
         self.grid_layout.addWidget(self.hbox_b_container, 2, 2, 1, 1)
 
         # Section C layout
@@ -99,8 +97,7 @@ class Timer_UI(QWidget):
         self.pushButton_c1 = QtWidgets.QPushButton("Start")
         self.hbox_c.addWidget(self.pushButton_c1)
             
-        self.pushButton_c3 = QtWidgets.QPushButton("Reset")
-        self.hbox_c.addWidget(self.pushButton_c3)
+        
         self.grid_layout.addWidget(self.hbox_c_container, 4, 0, 1, 1)    
 
         # Section D layout
@@ -121,8 +118,7 @@ class Timer_UI(QWidget):
         self.pushButton_d1 = QtWidgets.QPushButton("Start")
         self.hbox_d.addWidget(self.pushButton_d1)
            
-        self.pushButton_d3 = QtWidgets.QPushButton("Reset")
-        self.hbox_d.addWidget(self.pushButton_d3)
+        
         self.grid_layout.addWidget(self.hbox_d_container, 4, 2, 1, 1)
 
         
@@ -135,12 +131,7 @@ class Timer_UI(QWidget):
         self.pushButton_c1.clicked.connect(lambda: self.change_button(self.pushButton_c1, self.timer_setting[2], self.label_c1, timer_c, 2))
         self.pushButton_d1.clicked.connect(lambda: self.change_button(self.pushButton_d1, self.timer_setting[3], self.label_d1, timer_d, 3))
 
-    # Reset Timer Button Links
-        self.pushButton_a3.clicked.connect(lambda: self.reset_timer(self.label_a1, self.timer_setting[0], self.pushButton_a1, timer_a, 0))
-        self.pushButton_b3.clicked.connect(lambda: self.reset_timer(self.label_b1, self.timer_setting[1], self.pushButton_b1, timer_b, 1))
-        self.pushButton_c3.clicked.connect(lambda: self.reset_timer(self.label_c1, self.timer_setting[2], self.pushButton_c1, timer_c, 2))
-        self.pushButton_d3.clicked.connect(lambda: self.reset_timer(self.label_d1, self.timer_setting[3], self.pushButton_d1, timer_d, 3))
-
+    
     # Audio Player Function
     def play_audio(self):
         audio_file = QUrl.fromLocalFile("timer_sound_modified.mp3")
