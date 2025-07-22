@@ -27,6 +27,8 @@ class Graph_Window(QWidget):
         colors1 = ['#4682A9', '#749BC2', '#91C8E4']
         colors2 = ['#FBFBFB', '#789DBC', '#BCCCDC']
 
+        self.graph_widget = QStackedWidget()
+
         # Data handling
         csv_path = 'timer_sessions.csv'
         df = pd.read_csv(csv_path)
@@ -193,80 +195,24 @@ class Graph_Window(QWidget):
                 count += 1
 
     # ============================= Bar Charts ============================================================
-
-    # Switch Buttion
-            self.cat1_button = QPushButton("Study")
-            self.cat2_button = QPushButton("Business")
-            self.cat3_button = QPushButton("Reading")  # New button
-
+         # Category Buttons
             self.button_layout = QHBoxLayout()
             self.button_container = QWidget()
             self.button_container.setLayout(self.button_layout)
 
-            for button in [self.cat1_button, self.cat2_button, self.cat3_button]:
-            
-                self.button_layout.addWidget(button)
-                button.setStyleSheet("color: black")
+            categories = ["Study", "Business", "Reading"]
+            self.cat_buttons = []
 
-            self.last_btn = self.cat1_button
+            def create_cat_buttons():
+                for index, button in enumerate(categories, start=0):
+                    self.cat_button = QPushButton(button)
+                    self.cat_button.setStyleSheet("color: black")
+                    self.button_layout.addWidget(self.cat_button)
+                    self.cat_button.clicked.connect(lambda _, i=index: self.graph_widget.setCurrentIndex(i))
+                    self.cat_buttons.append(button)
 
-            self.cat1_button.clicked.connect(lambda: swith_charts(self.cat1_button, self.last_btn, 0))
-            self.cat2_button.clicked.connect(lambda: swith_charts(self.cat2_button, self.last_btn, 1))
-            self.cat3_button.clicked.connect(lambda: swith_charts(self.cat3_button, self.last_btn, 2))  # Connect signal
-
-            def swith_charts(cur_btn, last_btn, index):
-                
-                cur_btn.setStyleSheet(f"""
-                                            QPushButton {{
-                                            background-color: {colors2[1]};
-                                            color: white;
-                                            }}
-                                            QPushButton:hover {{
-                                                background-color: {colors2[2]}
-                                                }}
-                                            
-                                            """)
-                if last_btn == cur_btn:
-                    pass
-                else:
-                    last_btn.setStyleSheet(f"""
-                                                QPushButton {{
-                                                background-color: white;
-                                                color: black
-                                                }}
-                                                QPushButton:hover {{
-                                                background-color: {colors2[2]}
-                                                }}
-                                            """)
                     
-                self.last_btn = cur_btn
-                self.graph_widget.setCurrentIndex(index)
-
-            self.button_container.setStyleSheet(f"""
-                                                QPushButton {{
-                                                background-color: white;
-                                                border: none;
-                                                padding: 0px;
-                                                margin: 0px;
-                                                }}
-
-                                                QPushButton:hover {{
-                                                background-color: {colors2[2]};
-                                            }}
-
-                                            """)
-            
-            self.cat1_button.setStyleSheet(f"""
-                                                QPushButton {{
-                                                background-color: {colors2[1]};
-                                                border: none;
-                                                color: white;
-                                                }}
-
-                                                QPushButton:hover {{
-                                                background-color: {colors2[2]};
-                                            }}
-                                            """)
+            create_cat_buttons()
             self.button_layout.setSpacing(0)
             self.button_layout.setContentsMargins(0, 0, 0, 0)
             
@@ -352,7 +298,7 @@ class Graph_Window(QWidget):
 
             
 
-            self.graph_widget = QStackedWidget()
+            
             self.graph_widget.addWidget(self.canvas1)
             self.graph_widget.addWidget(self.canvas2)
             self.graph_widget.addWidget(self.canvas3)
