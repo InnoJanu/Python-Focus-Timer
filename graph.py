@@ -26,7 +26,7 @@ class Graph_Window(QWidget):
 
         self.graph_widget = QStackedWidget()
 
-        # Data handling
+# ================================== Data Handeling ====================================================
         csv_path = 'timer_sessions.csv'
         df = pd.read_csv(csv_path)
         df.index = df.index + 1
@@ -37,10 +37,7 @@ class Graph_Window(QWidget):
         current_monday = today - pd.Timedelta(days=today.weekday())
         current_sunday = current_monday + pd.Timedelta(weeks=0.9)
         current_week = df[(df['date'] <= today) & (df['date'] >= current_monday)]
-        prev_monday = current_monday - pd.Timedelta(weeks=1)
-        prev_sunday = current_monday - pd.Timedelta(days=1)
-        prev_week = df[(df['date'] >= prev_monday) & (df['date'] <= prev_sunday)]
-
+        
       # Reconstruct Full DataFrame
         full_dates = pd.date_range(start=current_monday, end=current_sunday)
         full_dates_df = pd.DataFrame({'date': full_dates})
@@ -61,7 +58,7 @@ class Graph_Window(QWidget):
         if not os.path.exists(csv_path) or pd.read_csv(csv_path).empty:
             self.main_layout = QVBoxLayout()
 
-            # Botton Layout
+            
             self.unavailable_text = QLabel('No Sessions Recorded')
             self.unavailable_text.setAlignment(Qt.AlignCenter)
             self.main_layout.addWidget(self.unavailable_text)
@@ -159,38 +156,39 @@ class Graph_Window(QWidget):
                 "Week Avg",
                 "Week Total"
             ]
-
+            
             self.sub_headings = [
                  f"{self.today_hours}h {self.today_mins}m",
                  f"{self.avg_hours}h {self.avg_mins}m",
                  f"{self.total_hours}h {self.total_mins}m",
             ]
             
-            # Initialize blocks
-            count = 0
-            for block in range(3):
-                #Intialize
-                self.block = QWidget()
-                self.block_layout = QVBoxLayout()
-                self.block.setLayout(self.block_layout)
+            def create_blocks():
+                count = 0
+                for block in range(3):
+                    #Intialize
+                    self.block = QWidget()
+                    self.block_layout = QVBoxLayout()
+                    self.block.setLayout(self.block_layout)
 
-                self.heading = QLabel(self.headings[count])
-                self.block_layout.addWidget(self.heading)
+                    self.heading = QLabel(self.headings[count])
+                    self.block_layout.addWidget(self.heading)
 
-                self.sub_heading = QLabel(self.sub_headings[count])
-                self.block_layout.addWidget(self.sub_heading)
+                    self.sub_heading = QLabel(self.sub_headings[count])
+                    self.block_layout.addWidget(self.sub_heading)
 
-                self.top_horizontal_layout.addWidget(self.block, 1)
+                    self.top_horizontal_layout.addWidget(self.block, 1)
 
-                # Style
-                self.heading.setStyleSheet("font-size: 40px")
-                self.heading.setAlignment(Qt.AlignCenter)
-                self.sub_heading.setStyleSheet("font-size: 25px")
-                self.sub_heading.setAlignment(Qt.AlignCenter)
+                    # Style
+                    self.heading.setStyleSheet("font-size: 40px")
+                    self.heading.setAlignment(Qt.AlignCenter)
+                    self.sub_heading.setStyleSheet("font-size: 25px")
+                    self.sub_heading.setAlignment(Qt.AlignCenter)
 
-                count += 1
+                    count += 1
+            create_blocks()
 
-    # ============================= Bar Charts ============================================================
+    # ============================= Category Buttons ============================================================
          # Category Buttons
             self.button_layout = QHBoxLayout()
             self.button_container = QWidget()
@@ -212,6 +210,7 @@ class Graph_Window(QWidget):
             self.button_layout.setSpacing(0)
             self.button_layout.setContentsMargins(0, 0, 0, 0)
             
+# ================================== Bar Charts ============================================================
             def create_bar_charts():
                 all_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
                 study_hours = [round(num / 60, 1) for num in study_duration_list]
