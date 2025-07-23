@@ -38,6 +38,7 @@ class Graph_Window(QWidget):
         current_sunday = current_monday + pd.Timedelta(weeks=0.9)
         current_week = df[(df['date'] <= today) & (df['date'] >= current_monday)]
         
+        
       # Reconstruct Full DataFrame
         full_dates = pd.date_range(start=current_monday, end=current_sunday)
         full_dates_df = pd.DataFrame({'date': full_dates})
@@ -45,6 +46,7 @@ class Graph_Window(QWidget):
         # Filter Categories for visulizations
         cur_study_filter = current_week[current_week['timer_type'] == 'Study']
         cur_study_filter = cur_study_filter[['date', 'duration']].groupby('date').sum().reset_index()
+        
 
         s_cur_week_final = pd.merge(
             full_dates_df,
@@ -55,7 +57,51 @@ class Graph_Window(QWidget):
         s_cur_week_final['duration'] = s_cur_week_final['duration'].fillna(0)
         study_duration_list = s_cur_week_final['duration'].tolist()
 
-        if not os.path.exists(csv_path) or pd.read_csv(csv_path).empty:
+        # For pie chart Visualization
+        # ----------------------------------------------------------------------------------------------------------------
+        cur_business_filter = current_week[current_week['timer_type'] == 'Business']
+        cur_business_filter = cur_business_filter[['date', 'duration']].groupby('date').sum().reset_index()
+
+        b_cur_week_final = pd.merge(
+            full_dates_df,
+            cur_business_filter, 
+            on='date',
+            how='left'
+        )
+        b_cur_week_final['duration'] = b_cur_week_final['duration'].fillna(0)
+        business_duration_list = b_cur_week_final['duration'].tolist()
+        
+        #-------------------------------------------------------------------------------------------------
+        cur_reading_filter = current_week[current_week['timer_type'] == 'Reading']
+        cur_reading_filter = cur_reading_filter[['date', 'duration']].groupby('date').sum().reset_index()
+
+        r_cur_week_final = pd.merge(
+            full_dates_df,
+            cur_reading_filter, 
+            on='date',
+            how='left'
+        )
+        r_cur_week_final['duration'] = r_cur_week_final['duration'].fillna(0)
+        reading_duration_list = r_cur_week_final['duration'].tolist()
+        
+        # Blocks
+        self.today_total_focus = df[df['date'] == today]['duration'].sum()
+        self.week_avg = current_week['duration'].sum() // (today.dayofweek + 1)
+        self.week_total = current_week['duration'].sum()
+    
+        # Pie Chart Data
+        total_study =  cur_study_filter['duration'].sum()
+        total_business = cur_business_filter['duration'].sum()
+        total_reading = cur_reading_filter['duration'].sum()
+
+        pie_labels = ['Study', 'Business', 'Reading']
+        pie_sizes = [total_study, total_business, total_reading]
+        pie_colors = colors1
+
+        filtered_data = [(label, size, color) for label, size, color in zip(pie_labels, pie_sizes, pie_colors) if size > 0]
+        
+
+        if not os.path.exists(csv_path) or pd.read_csv(csv_path).empty or current_week.empty:
             self.main_layout = QVBoxLayout()
 
             
@@ -66,51 +112,8 @@ class Graph_Window(QWidget):
             self.setLayout(self.main_layout)
         else:
         
-            # ----------------------------------------------------------------------------------------------------------------
-            cur_business_filter = current_week[current_week['timer_type'] == 'Business']
-            cur_business_filter = cur_business_filter[['date', 'duration']].groupby('date').sum().reset_index()
-
-            b_cur_week_final = pd.merge(
-                full_dates_df,
-                cur_business_filter, 
-                on='date',
-                how='left'
-            )
-            b_cur_week_final['duration'] = b_cur_week_final['duration'].fillna(0)
-            business_duration_list = b_cur_week_final['duration'].tolist()
-            
-            #-------------------------------------------------------------------------------------------------
-            cur_reading_filter = current_week[current_week['timer_type'] == 'Reading']
-            cur_reading_filter = cur_reading_filter[['date', 'duration']].groupby('date').sum().reset_index()
-
-            r_cur_week_final = pd.merge(
-                full_dates_df,
-                cur_reading_filter, 
-                on='date',
-                how='left'
-            )
-            r_cur_week_final['duration'] = r_cur_week_final['duration'].fillna(0)
-            reading_duration_list = r_cur_week_final['duration'].tolist()
-            
-            # Blocks
-            self.today_total_focus = df[df['date'] == today]['duration'].sum()
-            self.week_avg = current_week['duration'].sum() // (today.dayofweek + 1)
-            self.week_total = current_week['duration'].sum()
-        
-            # Pie numbers
-            total_study =  cur_study_filter['duration'].sum()
-            total_business = cur_business_filter['duration'].sum()
-            total_reading = cur_reading_filter['duration'].sum()
             
             # ================================================ Pie Chart ================================================
-            # Data
-            pie_labels = ['Study', 'Business', 'Reading']
-            pie_sizes = [total_study, total_business, total_reading]
-            pie_colors = colors1
-
-            filtered_data = [(label, size, color) for label, size, color in zip(pie_labels, pie_sizes, pie_colors) if size > 0]
-
-            # Create Figure and Canvas
             fig = Figure(figsize=(5, 5))
             canvas = FigureCanvas(fig)
             ax = fig.add_subplot(111)
@@ -203,9 +206,7 @@ class Graph_Window(QWidget):
                     self.cat_button.setStyleSheet("color: black")
                     self.button_layout.addWidget(self.cat_button)
                     self.cat_button.clicked.connect(lambda _, i=index: self.graph_widget.setCurrentIndex(i))
-                    self.cat_buttons.append(button)
-
-                    
+                    self.cat_buttons.append(button)        
             create_cat_buttons()
             self.button_layout.setSpacing(0)
             self.button_layout.setContentsMargins(0, 0, 0, 0)
