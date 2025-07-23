@@ -4,12 +4,9 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from PyQt5.QtCore import Qt
 import os
-
 from PyQt5.QtWidgets import QWidget, QStackedWidget, QGridLayout, QHBoxLayout, QPushButton, QLabel
-# Data imports
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+
 
 class Graph_Window(QWidget):
     def __init__(self, stacked_widget):
