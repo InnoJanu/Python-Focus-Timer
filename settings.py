@@ -33,6 +33,7 @@ class Settings_Page(QWidget):
                 if text:
                     timer_instance.timer_types[i] = text
                     field.clear()
+                    self.set_inputs[i].setPlaceholderText(text)
 
             print(timer_instance.timer_types)
         
@@ -40,6 +41,7 @@ class Settings_Page(QWidget):
             update_type_list()
             timer_instance.combobox.clear()
             timer_instance.combobox.addItems(timer_instance.timer_types)
+            
 
         # Set layout to the widget
         self.setLayout(layout)
