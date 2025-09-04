@@ -15,6 +15,9 @@ class Timer_UI(QWidget):
         self.stacked_widget = stacked_widget
         self.player = QMediaPlayer()
 
+        # Timer Type Names
+        timer_types = ["Study", "Business", "Reading"]
+
         # Timer Settings
         self.timer_setting = [(10 * 60), (25 * 60), (30 * 60), (40 * 60)]
         self.remaining_time = 0
@@ -36,7 +39,7 @@ class Timer_UI(QWidget):
         self.combobox.setObjectName("combobox")
         self.combobox.setFixedSize(200, 60)
         self.grid_layout.addWidget(self.combobox, 0, 1, 1, 1)
-        self.combobox.addItems(["Study", "Business", "Reading"])
+        self.combobox.addItems(timer_types)
 
 
         # Section A layout
