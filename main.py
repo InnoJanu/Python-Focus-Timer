@@ -29,7 +29,7 @@ stacked_widget.addWidget(graph_window)
 about_window = About_page(stacked_widget)
 stacked_widget.addWidget(about_window)
 
-settings_window = Settings_Page(stacked_widget)
+settings_window = Settings_Page(stacked_widget, timer_window)
 stacked_widget.addWidget(settings_window)
 
 # App Size
@@ -41,7 +41,6 @@ app_height = stacked_widget.height()
 stacked_widget.setCurrentIndex(0)
 
 # Side bar
-
 side_bar = QWidget()
 side_bar_layout = QVBoxLayout()
 side_bar_layout.setSpacing(0)

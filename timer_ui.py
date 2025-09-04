@@ -16,7 +16,7 @@ class Timer_UI(QWidget):
         self.player = QMediaPlayer()
 
         # Timer Type Names
-        timer_types = ["Study", "Business", "Reading"]
+        self.timer_types = ["IT", "Film & Photo", "TEFL"]
 
         # Timer Settings
         self.timer_setting = [(10 * 60), (25 * 60), (30 * 60), (40 * 60)]
@@ -39,7 +39,7 @@ class Timer_UI(QWidget):
         self.combobox.setObjectName("combobox")
         self.combobox.setFixedSize(200, 60)
         self.grid_layout.addWidget(self.combobox, 0, 1, 1, 1)
-        self.combobox.addItems(timer_types)
+        self.combobox.addItems(self.timer_types)
 
 
         # Section A layout

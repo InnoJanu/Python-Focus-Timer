@@ -2,36 +2,44 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QLineEdit
 from PyQt5.QtCore import Qt
 
-import timer_ui
-
 class Settings_Page(QWidget):
-    def __init__(self, stacked_widget):
+    def __init__(self, stacked_widget, timer_instance):
         super().__init__()
         self.stacked_widget = stacked_widget
 
         # Set up layout
         layout = QVBoxLayout()
 
+        # Set Input Boxes
+        self.set_inputs = []
+
+        input_count = 0
+        for _ in range(3):
+            set_input = QLineEdit()
+            set_input.setPlaceholderText(timer_instance.combobox.itemText(input_count))
+            layout.addWidget(set_input)
+
+            self.set_inputs.append(set_input)
+            input_count += 1
+
+        apply_button = QPushButton('Apply')
+        layout.addWidget(apply_button)
         
-        for label in range(3):
-            vertical_box = QWidget()
-            vertical_box_layout = QHBoxLayout()
+        apply_button.clicked.connect(lambda: update_combo_box())
 
-            input_text = QLineEdit()
-            input_text.setPlaceholderText("Custom 1")
-            set_button = QPushButton('Set')
-            
-            vertical_box_layout.addWidget(input_text)
-            vertical_box_layout.addWidget(set_button)
-            
-            vertical_box.setLayout(vertical_box_layout)
-            layout.addWidget(vertical_box)
+        def update_type_list():
+            for i, field in enumerate(self.set_inputs):
+                text = field.text().strip()
+                if text:
+                    timer_instance.timer_types[i] = text
+                    field.clear()
 
+            print(timer_instance.timer_types)
         
-
-        # Add a button
-        button = QPushButton("Click Me")
-        layout.addWidget(button)
+        def update_combo_box():
+            update_type_list()
+            timer_instance.combobox.clear()
+            timer_instance.combobox.addItems(timer_instance.timer_types)
 
         # Set layout to the widget
         self.setLayout(layout)
@@ -39,7 +47,6 @@ class Settings_Page(QWidget):
         self.resize(400, 200)
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = Settings_Page(None)
-    window.show()
-    sys.exit(app.exec_())
+    print("=====================================")
+    print("Use the main script to see settings")
+    print("=====================================")
