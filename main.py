@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QSizePolicy
 from timer_ui import Timer_UI
 from graph import Graph_Window
 from about import About_page
+from settings import Settings_Page
 
 colors1 = ['#4682A9', '#749BC2', '#91C8E4']
 colors2 = ['#FBFBFB', '#789DBC', '#BCCCDC']
@@ -27,6 +28,9 @@ stacked_widget.addWidget(graph_window)
 
 about_window = About_page(stacked_widget)
 stacked_widget.addWidget(about_window)
+
+settings_window = Settings_Page(stacked_widget)
+stacked_widget.addWidget(settings_window)
 
 # App Size
 app_width = stacked_widget.width()
@@ -47,16 +51,18 @@ side_bar.setLayout(side_bar_layout)
 button1 = QPushButton("Timers")
 button2 = QPushButton("Stats")
 button3 = QPushButton("About")
+button4 = QPushButton("Settings")
 
 
 
 side_bar_layout.addWidget(button1)
 side_bar_layout.addWidget(button2)
 side_bar_layout.addWidget(button3)
+side_bar_layout.addWidget(button4)
 side_bar_layout.addStretch()
 side_bar.setMinimumWidth(100)
 
-for button in [button1, button2, button3]:
+for button in [button1, button2, button3, button4]:
     button.setStyleSheet(f"""
         QPushButton {{
             border: none;
@@ -99,6 +105,7 @@ app.setStyleSheet("""
 button1.clicked.connect(lambda: stacked_widget.setCurrentIndex(0))
 button2.clicked.connect(lambda: stacked_widget.setCurrentIndex(1))
 button3.clicked.connect(lambda: stacked_widget.setCurrentIndex(2))
+button4.clicked.connect(lambda: stacked_widget.setCurrentIndex(3))
 
 
 # Main Layout
