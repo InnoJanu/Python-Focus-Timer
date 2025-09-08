@@ -5,7 +5,6 @@ from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtWidgets import QSizePolicy
 
 
-
 # Import Scripts
 from timer_ui import Timer_UI
 from graph import Graph_Window

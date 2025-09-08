@@ -22,10 +22,11 @@ class Settings_Page(QWidget):
             self.set_inputs.append(set_input)
             input_count += 1
 
+
         apply_button = QPushButton('Apply')
         layout.addWidget(apply_button)
-        
         apply_button.clicked.connect(lambda: update_combo_box())
+
 
         def update_type_list():
             for i, field in enumerate(self.set_inputs):
@@ -34,9 +35,8 @@ class Settings_Page(QWidget):
                     timer_instance.timer_types[i] = text
                     field.clear()
                     self.set_inputs[i].setPlaceholderText(text)
-
-            print(timer_instance.timer_types)
         
+
         def update_combo_box():
             update_type_list()
             timer_instance.combobox.clear()
